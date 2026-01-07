@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+
+  <!-- Disable caching as much as possible -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <script>
+    // Fetch latest target link (anti-cache)
+    fetch("target.txt?t=" + Date.now())
+      .then(response => response.text())
+      .then(url => {
+        url = url.trim();
+        if (url.startsWith("http")) {
+          window.location.replace(url);
+        } else {
+          document.body.innerHTML = "Invalid redirect URL";
+        }
+      })
+      .catch(() => {
+        document.body.innerHTML = "Redirect service unavailable";
+      });
+  </script>
+</head>
+<body>
+Redirecting...
+</body>
+</html>
