@@ -2,31 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <title>Redirecting…</title>
 
-  <!-- Disable caching as much as possible -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <!-- ================= SECURITY & SAFETY HEADERS ================= -->
+
+  <!-- Disable caching (best possible on static hosting) -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
+  <!-- Prevent MIME sniffing -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+  <!-- Clickjacking protection -->
+  <meta http-equiv="X-Frame-Options" content="DENY">
+
+  <!-- Referrer safety -->
+  <meta name="referrer" content="no-referrer">
+
+  <!-- Content Security Policy (VERY IMPORTANT) -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'none';
+          script-src 'self';
+          connect-src 'self';
+          style-src 'unsafe-inline';
+        ">
+
+  <!-- Bot & SEO friendly (not phishing-like) -->
+  <meta name="robots" content="index,follow">
+
+  <!-- ================= REDIRECT LOGIC ================= -->
+
   <script>
-    // Fetch latest target link (anti-cache)
     fetch("target.txt?t=" + Date.now())
-      .then(response => response.text())
+      .then(r => r.text())
       .then(url => {
         url = url.trim();
-        if (url.startsWith("http")) {
+
+        // Basic safety validation
+        if (/^https?:\/\/.+/i.test(url)) {
           window.location.replace(url);
         } else {
-          document.body.innerHTML = "Invalid redirect URL";
+          document.body.innerHTML = "Invalid redirect target";
         }
       })
       .catch(() => {
-        document.body.innerHTML = "Redirect service unavailable";
+        document.body.innerHTML = "Service temporarily unavailable";
       });
   </script>
 </head>
+
 <body>
-Redirecting...
+Redirecting securely…
 </body>
 </html>
