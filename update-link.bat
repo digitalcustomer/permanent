@@ -8,7 +8,10 @@ echo   PERMANENT LINK AUTO UPDATE SCRIPT
 echo =========================================
 echo.
 
-:: Ask for new link
+:: Move to this script's directory (VERY IMPORTANT)
+cd /d "%~dp0"
+
+:: Ask for new URL
 set /p NEWURL=Enter NEW website URL (https://...): 
 
 :: Empty check
@@ -19,7 +22,7 @@ if "%NEWURL%"=="" (
   exit /b
 )
 
-:: Simple HTTPS check (NO regex issues)
+:: Simple https check
 if not "%NEWURL:~0,8%"=="https://" (
   echo.
   echo ERROR: URL https:// se start hona chahiye
@@ -27,24 +30,31 @@ if not "%NEWURL:~0,8%"=="https://" (
   exit /b
 )
 
-:: Write link to target.txt
+:: Update target.txt
 echo %NEWURL%> target.txt
 
-:: Git operations
+echo.
+echo Updating GitHub...
+
+:: Always sync first
+git pull origin main
+
+:: Commit & push
 git add target.txt
 git commit -m "Update redirect target"
-git push
+git push origin main
 
 if errorlevel 1 (
   echo.
-  echo ERROR: Git push fail hua (internet ya login check karo)
+  echo ERROR: Git push fail hua
+  echo Check internet ya GitHub login
   pause
   exit /b
 )
 
 echo.
-echo SUCCESS!
-echo Redirect link safely update ho gaya
-echo GitHub Pages 30–90 seconds me update ho jayega
+echo ✅ SUCCESS!
+echo 🔗 Redirect updated
+echo ⏳ GitHub Pages 30–90 seconds me update ho jayega
 echo =========================================
 pause
