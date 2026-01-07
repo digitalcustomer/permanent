@@ -4,56 +4,35 @@
   <meta charset="UTF-8">
   <title>Redirecting…</title>
 
-  <!-- ================= SECURITY & SAFETY HEADERS ================= -->
-
-  <!-- Disable caching (best possible on static hosting) -->
+  <!-- Disable cache -->
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <!-- Prevent MIME sniffing -->
+  <!-- Basic safety (SAFE, not breaking) -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-
-  <!-- Clickjacking protection -->
-  <meta http-equiv="X-Frame-Options" content="DENY">
-
-  <!-- Referrer safety -->
   <meta name="referrer" content="no-referrer">
-
-  <!-- Content Security Policy (VERY IMPORTANT) -->
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'none';
-          script-src 'self';
-          connect-src 'self';
-          style-src 'unsafe-inline';
-        ">
-
-  <!-- Bot & SEO friendly (not phishing-like) -->
   <meta name="robots" content="index,follow">
 
-  <!-- ================= REDIRECT LOGIC ================= -->
-
   <script>
-    fetch("target.txt?t=" + Date.now())
-      .then(r => r.text())
+    fetch("./target.txt?t=" + Date.now())
+      .then(res => res.text())
       .then(url => {
         url = url.trim();
 
-        // Basic safety validation
-        if (/^https?:\/\/.+/i.test(url)) {
-          window.location.replace(url);
+        if (url.startsWith("http")) {
+          window.location.href = url;
         } else {
           document.body.innerHTML = "Invalid redirect target";
         }
       })
-      .catch(() => {
-        document.body.innerHTML = "Service temporarily unavailable";
+      .catch(err => {
+        document.body.innerHTML = "Redirect failed";
       });
   </script>
 </head>
 
 <body>
-Redirecting securely…
+Redirecting…
 </body>
 </html>
